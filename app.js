@@ -38,9 +38,12 @@ function addMember() {
     {
         message: "Please enter the team member's email address:",
         name: "email"
-    }])
-
-}
+    },
+    {
+        message: "Please enter the team member's ID:",
+        name: "id"
+    }
+])}
 
 addMember();
 
