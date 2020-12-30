@@ -4,7 +4,9 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-
+const engineerQuestions = require("./questions/engineer.js")
+const internQuestions = require("./questions/intern.js")
+const managerQuestions = require("./questions/manager.js")
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
@@ -16,45 +18,69 @@ const render = require("./lib/htmlRenderer");
 const employees = [];
 
 function addMember() {
+    console.log("Add as many employees as you need to, then select finished when done to exit")
     inquirer.prompt([{
-        message: "Please type the team member's name here:",
-        name: "name"
-    },
-    {
         type: "list",
-        message: "Select the team member's role",
-        choices: [
-            "Engineer",
-            "Manager",
-            "Intern"
-        ],
-        name: "role"
-    },
-    {
-        message: "Please enter the team member's email address:",
-        name: "email"
-    },
-    {
-        message: "Please enter the team member's ID:",
-        name: "id"
-    }
-])}
+        name: "teamMember",
+        message: "What type of team member would you like to add?",
+        choices: ["Manager", "Engineer", "Intern", "Finished"]
+    }]).then(answer => {
+        switch (answer.teamMember) {
+            case "Manager":
+                addManager();
+                break;
+            case "Engineer":
+                addEngineer();
+                break;
+            case "Intern":
+                addIntern();
+                break;
+            default:
+                buildTeam()
+        }
 
+    })
+    //switch statement
+   
+    
+}
+
+function buildTeam () {
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR)
+    }
+    fs.writeFileSync(outputPath, render(employees), "utf-8")
+}
+
+
+function addManager() {
+    inquirer.prompt(managerQuestions)
+        .then(response => {
+            const manager = new Manager(response.managerName, response.managerId, response.managerEmail, response.managerOfficeNumber)
+            employees.push(manager) 
+            addMember()
+        })
+}
+
+function addEngineer() {
+    inquirer.prompt(engineerQuestions)
+    .then(response => {
+        const engineer = new Engineer(response.engineerName, response.engineerId, response.engineerEmail, response.engineerGithub)
+        employees.push(engineer) 
+        addMember()
+    })
+}
+
+function addIntern() {
+    inquirer.prompt(internQuestions)
+    .then(response => {
+        const intern = new Intern(response.internName, response.internId, response.internEmail, response.internSchool)
+        employees.push(intern) 
+        addMember()
+    })
+}
 
 addMember();
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
 
 
