@@ -25,17 +25,4 @@ The project must generate a `team.html` page in the `output` directory, that dis
 ## Project Screencap
 ![Screencap](https://raw.githubusercontent.com/mdurst365/employee_summary/main/assets/output.JPG)
 
-## Bonus
-
-* Use validation to ensure that the information provided is in the proper expected format.
-
-* Add the application to your portfolio.
-
-## Submission on BCS
-
-You are required to submit the following:
-
-* The URL of the GitHub repository
-
-* A video demonstrating the entirety of the app's functionality 
 
